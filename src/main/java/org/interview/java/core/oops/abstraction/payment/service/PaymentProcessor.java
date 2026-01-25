@@ -9,7 +9,6 @@ public class PaymentProcessor {
 
     public static void main(String[] args) {
 
-
         CreditCardPaymentService creditCardPaymentService = new CreditCardPaymentService("CC123",100.0,"Credit Card",true);
         creditCardPaymentService.pay();
 

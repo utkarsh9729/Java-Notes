@@ -7,7 +7,9 @@ public class Bike extends Vehicle{
     }
 
     private boolean standOff= false;
-
+    public static String honk(String s){
+        return  s+ " Bike Honk!";
+    }
 
     public void setStandOff(boolean standOff){
 

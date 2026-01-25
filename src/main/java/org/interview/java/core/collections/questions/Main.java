@@ -1,11 +1,8 @@
-package org.interview;
+package org.interview.java.core.collections.questions;
 
-import org.interview.java.core.collections.questions.CustomLRUCache;
-
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
-public class Main {
+ class Main {
     public static void main(String[] args) {
+
         CustomLRUCache cache = new CustomLRUCache(4);
 
 
@@ -21,5 +18,6 @@ public class Main {
         cache.put(7,6);
 
         System.out.println(cache.get(6));
+
     }
 }
