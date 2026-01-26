@@ -28,8 +28,11 @@ public class MultiLevelGrouping {
         Employee employee4 = new Employee("John","Marketing",4000,"Bangalore",1);
         List<Employee> employeeList= Arrays.asList(employee,employee1,employee2,employee3,employee4);
 
-        Map<String, Map<String,List<Employee>>> ans =
-                employeeList.stream().collect(Collectors.groupingBy(Employee::getDepartment,Collectors.groupingBy(Employee::getCiti,Collectors.toList())));
+        Map<String, Map<String,List<String>>> ans =
+                employeeList.stream().collect(Collectors.groupingBy(Employee::getDepartment,Collectors.groupingBy(Employee::getCiti, Collectors.mapping(Employee::getName,Collectors.toList()))));
         System.out.println(ans);
     }
 }
+
+
+// employee.stream().collect(Collectors.groupingBy(Employee::getAge, Employee::getName));
