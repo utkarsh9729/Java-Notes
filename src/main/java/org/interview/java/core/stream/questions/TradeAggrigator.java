@@ -30,4 +30,8 @@ Output: Map<String, Candle>.
 *
 * */
 public class TradeAggrigator {
+
+    public static void main(String[] args) {
+
+    }
 }
