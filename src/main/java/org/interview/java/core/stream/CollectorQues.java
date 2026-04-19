@@ -1,54 +1,101 @@
 package org.interview.java.core.stream;
 
+import org.interview.java.core.stream.questions.models.Employee;
 
-/*
-*
-* Q1. Convert List to Map
+import java.util.*;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
-Given a list of Employee(id, name), use Collectors.toMap() to convert it into a Map<Integer, String> where id is key and name is value.
-Handle duplicate IDs by keeping the latest entry.
-
-Q2. Joining Names with Delimiter
-
-Given a list of strings, join them into a single string separated by commas, enclosed with [] using Collectors.joining().
-Input: ["Alice", "Bob", "Charlie"] → Output: [Alice, Bob, Charlie].
-
-Q3. Word Frequency Counter
-
-Given a sentence, count the frequency of each word using Collectors.groupingBy() and Collectors.counting().
-
-Q4. Department-wise Employee Count
-
-Given a list of employees with department, use groupingBy() to compute the number of employees in each department.
-
-Q5. Partition Numbers into Even and Odd
-
-Given a list of integers, partition them into even and odd using partitioningBy().
-
-Q6. Department-wise Highest Salary
-
-Find the employee with the maximum salary in each department using Collectors.groupingBy() + Collectors.maxBy().
-
-Q7. Collecting into a TreeSet
-
-Given a list of strings, collect them into a TreeSet (sorted order) using Collectors.toCollection().
-
-Q8. Custom Collector – Concatenate Uppercase Strings
-
-Write a custom collector that concatenates all strings in uppercase without using Collectors.joining().
-
-Hint: Implement using Collector.of(supplier, accumulator, combiner, finisher).
-
-Q9. Department-wise Average Salary
-
-Find the average salary per department using Collectors.groupingBy() and averagingInt().
-
-Q10. Custom Collector – Product of Numbers
-
-Write a custom collector to compute the product of all integers in a list.
-(It should work like reduce(1, (a, b) -> a * b), but using Collector.of()).
-*
-* */
-
+/**
+ * Solutions for common Collector challenges.
+ */
 public class CollectorQues {
+
+    public static void main(String[] args) {
+        List<Employee> employees = Arrays.asList(
+            new Employee("Alice", "IT", 60000, "New York", 1),
+            new Employee("Bob", "HR", 50000, "London", 2),
+            new Employee("Charlie", "IT", 70000, "New York", 3),
+            new Employee("David", "HR", 55000, "London", 4),
+            new Employee("Eve", "IT", 65000, "New York", 1) // Duplicate ID for testing
+        );
+
+        // Q1. Convert List to Map (Handling duplicates by keeping latest)
+        Map<Long, String> idToNameMap = employees.stream()
+            .collect(Collectors.toMap(
+                Employee::getId,
+                Employee::getName,
+                (existing, replacement) -> replacement // merge function
+            ));
+        System.out.println("Q1 (Map): " + idToNameMap);
+
+        // Q2. Joining Names with Delimiter
+        String joinedNames = employees.stream()
+            .map(Employee::getName)
+            .collect(Collectors.joining(", ", "[", "]"));
+        System.out.println("Q2 (Joined): " + joinedNames);
+
+        // Q3. Word Frequency Counter
+        String sentence = "java stream collector java collector example";
+        Map<String, Long> wordFrequency = Arrays.stream(sentence.split(" "))
+            .collect(Collectors.groupingBy(word -> word, Collectors.counting()));
+        System.out.println("Q3 (Frequency): " + wordFrequency);
+
+        // Q4. Department-wise Employee Count
+        Map<String, Long> deptCount = employees.stream()
+            .collect(Collectors.groupingBy(Employee::getDepartment, Collectors.counting()));
+        System.out.println("Q4 (Dept Count): " + deptCount);
+
+        // Q5. Partition Numbers into Even and Odd
+        List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5, 6);
+        Map<Boolean, List<Integer>> partitioned = numbers.stream()
+            .collect(Collectors.partitioningBy(n -> n % 2 == 0));
+        System.out.println("Q5 (Partitioned): " + partitioned);
+
+        // Q6. Department-wise Highest Salary
+        Map<String, Optional<Employee>> topSalaryByDept = employees.stream()
+            .collect(Collectors.groupingBy(
+                Employee::getDepartment,
+                Collectors.maxBy(Comparator.comparingDouble(Employee::getSalary))
+            ));
+        System.out.println("Q6 (Top Salary Dept): " + topSalaryByDept);
+
+        // Q7. Collecting into a TreeSet
+        TreeSet<String> sortedNames = employees.stream()
+            .map(Employee::getName)
+            .collect(Collectors.toCollection(TreeSet::new));
+        System.out.println("Q7 (Sorted Names): " + sortedNames);
+
+        // Q8. Custom Collector – Concatenate Uppercase Strings
+        String customJoined = employees.stream()
+            .map(Employee::getName)
+            .collect(Collector.of(
+                StringBuilder::new,
+                (sb, name) -> {
+                    if (sb.length() > 0) sb.append("|");
+                    sb.append(name.toUpperCase());
+                },
+                (sb1, sb2) -> sb1.append(sb2),
+                StringBuilder::toString
+            ));
+        System.out.println("Q8 (Custom Join): " + customJoined);
+
+        // Q9. Department-wise Average Salary
+        Map<String, Double> avgSalary = employees.stream()
+            .collect(Collectors.groupingBy(
+                Employee::getDepartment,
+                Collectors.averagingDouble(Employee::getSalary)
+            ));
+        System.out.println("Q9 (Avg Salary): " + avgSalary);
+
+        // Q10. Custom Collector – Product of Numbers
+        long product = numbers.stream()
+            .collect(Collector.of(
+                () -> new long[]{1},
+                (acc, n) -> acc[0] *= n,
+                (acc1, acc2) -> { acc1[0] *= acc2[0]; return acc1; },
+                acc -> acc[0]
+            ));
+        System.out.println("Q10 (Product): " + product);
+    }
 }

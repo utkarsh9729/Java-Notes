@@ -33,12 +33,11 @@ public class CustomLRUCache {
     }
 
     private void delete(Node node){
-        assert  nonNull(node);
-        node.prev = node.next;
+        node.prev.next = node.next;
+        node.next.prev = node.prev;
     }
 
     private  void insertAtTheTop(Node node){
-        assert nonNull(node);
         Node tempNode = head.next;
         head.next = node;
         node.next = tempNode;
@@ -57,6 +56,7 @@ public class CustomLRUCache {
         else{
             if(map.size()==capacity){
                 Node lastNode = tail.prev;
+                map.remove(lastNode.key);
                 delete(lastNode);
             }
             Node node = new Node(key,value);

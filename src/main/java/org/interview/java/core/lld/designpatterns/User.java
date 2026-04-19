@@ -1,6 +1,7 @@
 package org.interview.java.core.lld.designpatterns;
 
-public class User {
+
+public class User  {
 
     private String username;
     private String email;

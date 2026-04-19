@@ -85,6 +85,15 @@ public class StreamQues {
 
         Map<Integer,List<String>> strList = arr.stream().collect(Collectors.groupingBy(String::length));
         strList.forEach((key, value) -> System.out.println(key + " " + value));
+
+
+        List<Trade> trades = Arrays.asList(new Trade("EUR",100.0),
+                new Trade("EUR",100.0),
+        new Trade("USD",400.0),
+        new Trade("INR",100.0),
+        new Trade("INR",200.0));
+
+        Map<String,Double> result = trades.stream().collect(Collectors.groupingBy(Trade::getCcy, Collectors.summingDouble(Trade::getAmount) ));
     }
 
 
